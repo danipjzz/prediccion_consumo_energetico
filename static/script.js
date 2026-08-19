@@ -1,29 +1,20 @@
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.querySelector("form");
+    const lcdReadout = document.getElementById("lcdReadout");
+    const lcdSub = document.getElementById("lcdSub");
     
-    // Crear dinámicamente un espacio sutil para mostrar el resultado si no existe
-    let resultContainer = document.querySelector("#result-output");
-    if (!resultContainer) {
-        resultContainer = document.createElement("div");
-        resultContainer.id = "result-output";
-        resultContainer.style.cssText = `
-            margin-top: 25px;
-            text-align: center;
-            font-family: 'Instrument Serif', serif;
-            font-size: 28px;
-            color: #332f2e;
-            letter-spacing: 0.5px;
-        `;
-        form.parentNode.appendChild(resultContainer);
-    }
+    // Elementos del resumen del día
+    const bdTotalHoras = document.getElementById("bdTotalHoras");
+    const bdTemporada = document.getElementById("bdTemporada");
+    const bdTipoDia = document.getElementById("bdTipoDia");
+    const bdEquivalente = document.getElementById("bdEquivalente");
 
     form.addEventListener("submit", async (e) => {
-        e.preventDefault(); // Evita que la página se recargue
+        e.preventDefault(); 
 
-        // Recopilar los datos del formulario
         const formData = new FormData(form);
-        
-        resultContainer.textContent = "Calculando predicción...";
+        lcdReadout.textContent = "Calculando...";
+        if (lcdSub) lcdSub.textContent = "Procesando predicción...";
 
         try {
             const response = await fetch("/predict", {
@@ -34,20 +25,28 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (data.success) {
-                // Muestra el consumo estimado
-                document.getElementById('resultado').textContent = `Consumo estimado: ${data.prediction} Wh`;
+                // 1. Mostrar el consumo estimado en el medidor LCD
+                lcdReadout.textContent = data.prediction;
+                if (lcdSub) lcdSub.textContent = "Predicción calculada con éxito";
                 
-                // Llena el resumen del día
-                document.getElementById('horas-totales').textContent = data.total_horas + ' h';
-                document.getElementById('temporada-resumen').textContent = data.temporada;
-                document.getElementById('tipo-dia-resumen').textContent = data.tipo_dia;
+                // 2. Llenar el Resumen del día con los IDs reales del HTML
+                if (bdTotalHoras) bdTotalHoras.textContent = data.total_horas + " h";
+                if (bdTemporada) bdTemporada.textContent = data.temporada;
+                if (bdTipoDia) bdTipoDia.textContent = data.tipo_dia;
+                
+                // Si quieres calcular un equivalente rápido (ej: focos encendidos)
+                if (bdEquivalente) {
+                    const equivFocos = Math.round(data.prediction / 10); // Ejemplo estimado
+                    bdEquivalente.textContent = `~${equivFocos} focos LED (10W)`;
+                }
             } else {
-                // Muestra exactamente qué falló en el backend
-                resultContainer.textContent = `Error: ${data.error}`;
+                lcdReadout.textContent = "Error";
+                if (lcdSub) lcdSub.textContent = data.error;
                 console.error(data.error);
             }
         } catch (error) {
-            resultContainer.textContent = "Ocurrió un error de conexión.";
+            lcdReadout.textContent = "Error";
+            if (lcdSub) lcdSub.textContent = "Ocurrió un error de conexión.";
             console.error(error);
         }
     });
