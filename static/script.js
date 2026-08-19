@@ -29,11 +29,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 lcdReadout.textContent = Number(data.prediction).toFixed(2);
                 if (lcdSub) lcdSub.textContent = "Predicción calculada con éxito";
                 
-                // --- ESTO HACE QUE EL CUADRO LCD SE ACTIVE Y MUESTRE EL NÚMERO ---
+                // --- FORZAR VISIBILIDAD VISUAL ---
+                lcdReadout.style.display = "block";
+                lcdReadout.style.visibility = "visible";
+                lcdReadout.style.opacity = "1";
+                lcdReadout.style.color = "#000"; // Asegurar que sea visible
+                
                 const lcdPanel = document.getElementById("lcdPanel");
                 if (lcdPanel) {
                     lcdPanel.classList.remove("idle");
-                    lcdPanel.classList.add("active");
+                    lcdPanel.style.opacity = "1";
                 }
                 
                 // 2. Llenar el Resumen del día
