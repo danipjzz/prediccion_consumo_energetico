@@ -69,7 +69,11 @@ def predict():
     return jsonify({"success": True, "prediction": round(pred_wh, 2)})
 
   except Exception as e:
-    return jsonify({"success": False, "error": str(e)}), 400
+      # Imprime el error exacto en la consola/logs de Render
+      import traceback
+
+      traceback.print_exc()
+      return jsonify({"success": False, "error": str(e)}), 400
 
 
 if __name__ == "__main__":

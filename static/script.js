@@ -34,10 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (data.success) {
-                // Mostrar el resultado con un formato limpio y elegante
                 resultContainer.textContent = `Consumo estimado: ${data.prediction} Wh`;
             } else {
-                resultContainer.textContent = "Error al calcular el consumo.";
+                // Muestra exactamente qué falló en el backend
+                resultContainer.textContent = `Error: ${data.error}`;
                 console.error(data.error);
             }
         } catch (error) {
