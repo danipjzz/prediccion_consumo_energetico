@@ -26,17 +26,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (data.success) {
                 // 1. Mostrar el consumo estimado en el medidor LCD
-                lcdReadout.textContent = data.prediction;
+                lcdReadout.textContent = Number(data.prediction).toFixed(2);
                 if (lcdSub) lcdSub.textContent = "Predicción calculada con éxito";
                 
-                // 2. Llenar el Resumen del día con los IDs reales del HTML
+                // --- NUEVO: Encender el panel quitando el estado idle ---
+                const lcdPanel = document.getElementById("lcdPanel");
+                if (lcdPanel) {
+                    lcdPanel.classList.remove("idle");
+                    lcdPanel.classList.add("active"); // O la clase que use tu CSS para el panel listo
+                }
+                
+                // 2. Llenar el Resumen del día
                 if (bdTotalHoras) bdTotalHoras.textContent = data.total_horas + " h";
                 if (bdTemporada) bdTemporada.textContent = data.temporada;
                 if (bdTipoDia) bdTipoDia.textContent = data.tipo_dia;
                 
-                // Si quieres calcular un equivalente rápido (ej: focos encendidos)
                 if (bdEquivalente) {
-                    const equivFocos = Math.round(data.prediction / 10); // Ejemplo estimado
+                    const equivFocos = Math.round(data.prediction / 10);
                     bdEquivalente.textContent = `~${equivFocos} focos LED (10W)`;
                 }
             } else {
