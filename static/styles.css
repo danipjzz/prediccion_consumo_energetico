@@ -184,3 +184,34 @@ button.submit:hover {
 button.submit:active {
   transform: scale(0.98);
 }
+/* Estilo para que el número del consumo estimado luzca grande y destacado */
+.lcd-readout {
+  font-family: 'Instrument Serif', serif; /* O la fuente que prefieras para números grandes */
+  font-size: 56px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin: 8px 0;
+}
+
+/* Estilo general para el contenedor del panel LCD */
+.panel.lcd {
+  background: var(--accent-soft);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.lcd-unit {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.lcd-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
