@@ -29,11 +29,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 lcdReadout.textContent = Number(data.prediction).toFixed(2);
                 if (lcdSub) lcdSub.textContent = "Predicción calculada con éxito";
                 
-                // --- NUEVO: Encender el panel quitando el estado idle ---
+                // --- ESTO HACE QUE EL CUADRO LCD SE ACTIVE Y MUESTRE EL NÚMERO ---
                 const lcdPanel = document.getElementById("lcdPanel");
                 if (lcdPanel) {
                     lcdPanel.classList.remove("idle");
-                    lcdPanel.classList.add("active"); // O la clase que use tu CSS para el panel listo
+                    lcdPanel.classList.add("active");
                 }
                 
                 // 2. Llenar el Resumen del día
