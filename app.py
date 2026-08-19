@@ -22,12 +22,15 @@ def predict():
     # 1. Obtener los datos enviados desde el formulario
     data = request.form.to_dict()
 
-    # Convertir los valores numéricos a float/int según corresponda
+    # Convertir los valores numéricos a float/int
     processed_data = {}
     for key, value in data.items():
       if key == "Date":
         processed_data[key] = value
       else:
+        # Reemplazar la coma por punto por si usan formato con coma (ej: 0,5 -> 0.5)
+        if isinstance(value, str):
+          value = value.replace(",", ".")
         processed_data[key] = float(value) if value else 0.0
 
     df = pd.DataFrame([processed_data])
