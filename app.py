@@ -19,21 +19,27 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
   try:
-    # 1. Obtener los datos enviados desde el formulario
     data = request.form.to_dict()
 
-    # Convertir los valores numéricos a float/int
     processed_data = {}
     for key, value in data.items():
-      if key == "Date":
+      # Si la clave es la fecha o el valor tiene el formato de una fecha (ej: YYYY-MM-DD)
+      if key.lower() in ["date", "fecha", "fechadia"] or (
+          isinstance(value, str) and "-" in value and len(value) == 10
+      ):
         processed_data[key] = value
       else:
-        # Reemplazar la coma por punto por si usan formato con coma (ej: 0,5 -> 0.5)
+        # Convertir campos numéricos de forma segura
         if isinstance(value, str):
           value = value.replace(",", ".")
         processed_data[key] = float(value) if value else 0.0
 
     df = pd.DataFrame([processed_data])
+
+    # Asegúrate de buscar el nombre correcto de la columna de fecha que espera tu modelo
+    # (Si en tu HTML el input se llama 'fecha', renómbralo a 'Date' para que coincida con tu ingeniería de características)
+    if "fecha" in df.columns and "Date" not in df.columns:
+      df["Date"] = df["fecha"]
 
     # 2. Replicar la ingeniería de características del Colab
     fecha = pd.to_datetime(df["Date"])
@@ -42,7 +48,7 @@ def predict():
     df["IsWeekend"] = (df["DayOfWeek"] >= 5).astype(int)
     df["IsWinter"] = df["Month"].isin([11, 12, 1, 2, 3]).astype(int)
 
-    # Suma de horas de aparatos (columnas que terminan o contienen '_hours')
+    # Suma de horas de aparatos
     appliance_cols = [c for c in df.columns if "_hours" in c]
     df["Total_Appliance_Hours"] = df[appliance_cols].sum(axis=1)
 
@@ -51,29 +57,24 @@ def predict():
           df["ElectricHeater_hours"] * df["IsWinter"]
       )
 
-    # One-hot encoding para Month y DayOfWeek
     df = pd.get_dummies(df, columns=["Month", "DayOfWeek"], drop_first=True)
 
-    # Asegurar que las columnas coincidan exactamente con las que usó el modelo
-    # (Si el modelo espera columnas específicas que faltan por el one-hot, se rellenan con 0)
     model_features = model.feature_names_in_
     for col in model_features:
       if col not in df.columns:
         df[col] = 0
     df = df[model_features]
 
-    # 3. Predecir (aplicando expm1 para revertir el log1p del entrenamiento)
     pred_log = model.predict(df)
     pred_wh = float(np.expm1(pred_log)[0])
 
     return jsonify({"success": True, "prediction": round(pred_wh, 2)})
 
   except Exception as e:
-      # Imprime el error exacto en la consola/logs de Render
-      import traceback
+    import traceback
 
-      traceback.print_exc()
-      return jsonify({"success": False, "error": str(e)}), 400
+    traceback.print_exc()
+    return jsonify({"success": False, "error": str(e)}), 400
 
 
 if __name__ == "__main__":
