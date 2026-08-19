@@ -68,7 +68,17 @@ def predict():
     pred_log = model.predict(df)
     pred_wh = float(np.expm1(pred_log)[0])
 
-    return jsonify({"success": True, "prediction": round(pred_wh, 2)})
+    return jsonify({
+        "success": True,
+        "prediction": round(pred_wh, 2),
+        "total_horas": round(float(df["Total_Appliance_Hours"].iloc[0]), 1),
+        "temporada": (
+            "Invierno" if df["IsWinter"].iloc[0] == 1 else "Normal"
+        ),
+        "tipo_dia": (
+            "Fin de semana" if df["IsWeekend"].iloc[0] == 1 else "Día hábil"
+        ),
+    })
 
   except Exception as e:
     import traceback

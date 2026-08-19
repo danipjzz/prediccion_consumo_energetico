@@ -34,7 +34,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (data.success) {
-                resultContainer.textContent = `Consumo estimado: ${data.prediction} Wh`;
+                // Muestra el consumo estimado
+                document.getElementById('resultado').textContent = `Consumo estimado: ${data.prediction} Wh`;
+                
+                // Llena el resumen del día
+                document.getElementById('horas-totales').textContent = data.total_horas + ' h';
+                document.getElementById('temporada-resumen').textContent = data.temporada;
+                document.getElementById('tipo-dia-resumen').textContent = data.tipo_dia;
             } else {
                 // Muestra exactamente qué falló en el backend
                 resultContainer.textContent = `Error: ${data.error}`;
