@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --bg-color: #f7f5f0;
+  --text-primary: #332f2e;
+  --text-muted: #8c8580;
+  --border-color: #e6e1db;
+  --accent-blush: #e3b5a4;
+  --accent-soft: #f2e6e0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+/* Contenedor principal (.wrap) eliminado: el formulario fluye directamente */
+.wrap {
+  width: 100%;
+  max-width: 600px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* Cabecera elegante */
+header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+header h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 38px;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+header p, .sub, .header-desc {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 300;
+}
+
+/* Secciones y formularios */
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.panel {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.group {
+  background: var(--accent-soft);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+
+.group-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.group-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+
+.group-total {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.appliance-row, .field-date {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.appliance-row:last-child {
+  margin-bottom: 0;
+}
+
+label {
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 300;
+}
+
+/* Inputs limpios */
+input {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  height: 36px;
+  padding: 0 12px;
+  font-size: 13px;
+  color: var(--text-primary);
+  width: 85px;
+  text-align: right;
+  transition: all 0.2s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--accent-blush);
+  box-shadow: 0 0 0 3px rgba(227, 181, 164, 0.15);
+}
+
+.field-date {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  background: transparent;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.field-date label {
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.field-date input {
+  width: 100%;
+  text-align: left;
+  height: 40px;
+}
+
+/* Botón estilizado */
+button.submit {
+  background: var(--text-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  padding: 12px 28px;
+  cursor: pointer;
+  display: block;
+  margin: 10px auto 0 auto;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+button.submit:hover {
+  background: var(--accent-blush);
+  color: var(--text-primary);
+}
+
+button.submit:active {
+  transform: scale(0.98);
+}
+
+/* Contenedor de consumo estimado (.lcd) oculto por completo */
+.lcd {
+  display: none;
+}

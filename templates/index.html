@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predicción de consumo · House 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet"> 
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>Predicción de consumo eléctrico diario</h1>
+      <p class="sub">Ingresa las horas de uso estimadas de cada aparato y la fecha. </p>
+    </div>
+    <div class="status-pill" id="statusPill">
+      <span class="dot" id="statusDot"></span>
+      <span id="statusText">Verificando conexión con la API…</span>
+    </div>
+  </header>
+
+  <div class="grid">
+
+    <!-- Panel de entrada -->
+    <div class="panel">
+      <form id="predictForm" novalidate>
+
+        <div class="field-date">
+          <label for="fecha">Fecha</label>
+          <input type="date" id="fecha" name="fecha" required>
+          <p class="hint">Determina mes, día de la semana y si cae en temporada de invierno (nov–mar).</p>
+        </div>
+
+        <div class="group">
+          <div class="group-head">
+            <span class="group-title">Refrigeración</span>
+            <span class="group-total" id="totalRefrigeracion">0.0 h</span>
+          </div>
+          <div class="appliance-row">
+            <label for="fridge">Nevera (Fridge)</label>
+            <input type="number" id="fridge" name="fridge_hours" min="0" max="24" step="0.1" value="4" required>
+          </div>
+          <div class="appliance-row">
+            <label for="freezer1">Congelador 1</label>
+            <input type="number" id="freezer1" name="freezer1_hours" min="0" max="24" step="0.1" value="6" required>
+          </div>
+          <div class="appliance-row">
+            <label for="freezer2">Congelador 2</label>
+            <input type="number" id="freezer2" name="freezer2_hours" min="0" max="24" step="0.1" value="6" required>
+          </div>
+        </div>
+
+        <div class="group">
+          <div class="group-head">
+            <span class="group-title">Lavandería</span>
+            <span class="group-total" id="totalLavanderia">0.0 h</span>
+          </div>
+          <div class="appliance-row">
+            <label for="washerdryer">Lavadora-secadora</label>
+            <input type="number" id="washerdryer" name="washerdryer_hours" min="0" max="24" step="0.1" value="0" required>
+          </div>
+          <div class="appliance-row">
+            <label for="washingmachine">Lavadora</label>
+            <input type="number" id="washingmachine" name="washingmachine_hours" min="0" max="24" step="0.1" value="0.5" required>
+          </div>
+          <div class="appliance-row">
+            <label for="dishwasher">Lavavajillas</label>
+            <input type="number" id="dishwasher" name="dishwasher_hours" min="0" max="24" step="0.1" value="0.5" required>
+          </div>
+        </div>
+
+        <div class="group">
+          <div class="group-head">
+            <span class="group-title">Trabajo &amp; entretenimiento</span>
+            <span class="group-total" id="totalEntretenimiento">0.0 h</span>
+          </div>
+          <div class="appliance-row">
+            <label for="computer">Computador</label>
+            <input type="number" id="computer" name="computer_hours" min="0" max="24" step="0.1" value="5" required>
+          </div>
+          <div class="appliance-row">
+            <label for="television">Televisor</label>
+            <input type="number" id="television" name="television_hours" min="0" max="24" step="0.1" value="3" required>
+          </div>
+        </div>
+
+        <div class="group">
+          <div class="group-head">
+            <span class="group-title">Climatización</span>
+            <span class="group-total" id="totalClimatizacion">0.0 h</span>
+          </div>
+          <div class="appliance-row">
+            <label for="electricheater">Calefactor eléctrico</label>
+            <input type="number" id="electricheater" name="electricheater_hours" min="0" max="24" step="0.1" value="0" required>
+          </div>
+        </div>
+
+        <button type="submit" class="submit" id="submitBtn">Predecir consumo</button>
+        <div class="error-box" id="errorBox"></div>
+
+        <details class="config">
+          <summary>Configuración de la API</summary>
+          <div class="config-body">
+            <input type="text" id="apiUrl" value="http://127.0.0.1:8000/predict">
+          </div>
+        </details>
+      </form>
+    </div>
+
+    <!-- Panel del medidor -->
+    <div class="meter">
+      <div class="panel lcd idle" id="lcdPanel">
+        <p class="meter-label">Consumo estimado</p>
+        <div class="lcd-readout" id="lcdReadout">— — — —</div>
+        <div class="lcd-unit" id="lcdUnit">Wh / día</div>
+        <div class="lcd-sub" id="lcdSub">Completa el formulario y presiona «Predecir consumo»</div>
+      </div>
+
+      <div class="panel">
+        <p class="meter-label" style="margin-bottom:14px;">Resumen del día</p>
+        <div class="breakdown">
+          <div class="bd-row"><span class="k">Horas totales de uso</span><span class="v" id="bdTotalHoras">—</span></div>
+          <div class="bd-row"><span class="k">Temporada</span><span class="v" id="bdTemporada">—</span></div>
+          <div class="bd-row"><span class="k">Tipo de día</span><span class="v" id="bdTipoDia">—</span></div>
+          <div class="bd-row"><span class="k">Equivalente</span><span class="v" id="bdEquivalente">—</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
