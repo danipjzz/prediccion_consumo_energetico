@@ -184,8 +184,3 @@ button.submit:hover {
 button.submit:active {
   transform: scale(0.98);
 }
-
-/* Contenedor de consumo estimado (.lcd) oculto por completo */
-.lcd {
-  display: none;
-}

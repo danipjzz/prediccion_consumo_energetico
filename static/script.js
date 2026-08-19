@@ -29,18 +29,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 lcdReadout.textContent = Number(data.prediction).toFixed(2);
                 if (lcdSub) lcdSub.textContent = "Predicción calculada con éxito";
                 
-                // --- FORZAR VISIBILIDAD VISUAL ---
-                lcdReadout.style.display = "block";
-                lcdReadout.style.visibility = "visible";
-                lcdReadout.style.opacity = "1";
-                lcdReadout.style.color = "#000"; // Asegurar que sea visible
-                
+                // Asegurar que el panel esté visible (si el CSS lo escondía)
                 const lcdPanel = document.getElementById("lcdPanel");
                 if (lcdPanel) {
+                    lcdPanel.style.display = "block"; // Forzar visualización
                     lcdPanel.classList.remove("idle");
-                    lcdPanel.style.opacity = "1";
                 }
-                
                 // 2. Llenar el Resumen del día
                 if (bdTotalHoras) bdTotalHoras.textContent = data.total_horas + " h";
                 if (bdTemporada) bdTemporada.textContent = data.temporada;
